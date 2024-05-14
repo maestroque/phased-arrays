@@ -1,4 +1,4 @@
-function y = triangularArrayRadPattern(Nx, Ny, dx, dy, f, u0, v0)
+function S = triangularArrayRadPattern(Nx, Ny, dx, dy, f, u0, v0, taperingFunction)
     % Nx, Ny: number of elements in x and y direction
     % dx, dy: distance between elements in x and y direction
     % f: frequency
@@ -15,15 +15,15 @@ function y = triangularArrayRadPattern(Nx, Ny, dx, dy, f, u0, v0)
         for l = 1:Ny
             psi = (dx*(r-1)*u0 + dy*(l-1)*v0);
             if mod(l - 1, 2) == 0
-                S = S + exp(1j * k * (dx*(r-1) * (u - u0) + dy*(l-1)*(v-v0)));
+                S = S + taperingFunction(r - Nx/2, Nx) * taperingFunction(l - Ny/2, Ny) * exp(1j * k * (dx*(r-1) * (u - u0) + dy*(l-1)*(v-v0)));
             else
-                S = S + exp(1j * k * (dx*(r-1/2)*u + dy*(l-1)*v - psi));
+                S = S + taperingFunction(r - Nx/2, Nx) * taperingFunction(l - Ny/2, Ny) * exp(1j * k * (dx*(r-1/2)*u + dy*(l-1)*v - psi));
             end
         end
     end
 
     S = abs(S);
-    S = S / max(S, [], "all");
+    S = 10*log10(S / max(S, [], "all"));
     figure;
     contourf(u, v, S);
     xlabel('Theta (radians)');
