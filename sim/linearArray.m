@@ -4,7 +4,7 @@ clear all;
 c = 3e8;
 f0 = 7.6e9;
 lambda0 = c / f0;
-theta0 = deg2rad(90);
+theta0 = deg2rad(10);
 Ny = 92;
 dy = 0.525 * lambda0;
 theta = linspace(-pi/2, pi/2, 1000);
