@@ -1,14 +1,7 @@
-function S = triangularArrayRadPattern(Nx, Ny, dx, dy, f, u0, v0, taperingFunction)
-    % Nx, Ny: number of elements in x and y direction
-    % dx, dy: distance between elements in x and y direction
-    % f: frequency
-    % theta0, phi0: direction of main beam
-
+function S = triangularArrayRadPattern(Nx, Ny, dx, dy, f, u, v, u0, v0, taperingFunction, elementRadPattern, polarization)
     c = 3e8;
     lambda = c/f;
     k = 2*pi/lambda;
-
-    [u, v] = meshgrid(-1:0.01:1, -1:0.01:1);
 
     S = zeros(size(u));
     for r = 1:Nx
@@ -22,14 +15,6 @@ function S = triangularArrayRadPattern(Nx, Ny, dx, dy, f, u0, v0, taperingFuncti
         end
     end
 
-    S = abs(S);
-    S = 10*log10(S / max(S, [], "all"));
-    figure;
-    contourf(u, v, S);
-    xlabel('Theta (radians)');
-    ylabel('Normalized Gain');
-    title('Linear Array Radiation Pattern');
-    grid on;
-    axis tight;
-
+    S = abs(elementRadPattern(u, v, polarization) .* S);
+    S = 20*log10(S / max(S, [], "all"));
 end
